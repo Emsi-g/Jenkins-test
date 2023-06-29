@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+    tools {
+        maven "MAVEN3" #Configure your own MAVEN3
+    }
+    
+    stages {
+        stage('Clone repo'){
+            steps {
+                git branch: 'main', url: 'https://github.com/Emsi-g/Jenkins-test.git'
+            }
+            post {
+                success {
+                    echo 'SUCCESS CLONE'
+                }
+            }
+        }
+            
+        stage('Build'){
+            steps {
+                sh 'mvn clean install -DskipTests'
+            }
+            post {
+                success {
+                    echo 'Now Archiving...'
+                    archiveArtifacts artifacts: '**/target/*.war'
+                }
+            }
+        }
+    }
+}
